@@ -1,0 +1,118 @@
+﻿<Window x:Name="window" x:Class="ContactsMVVM.Views.NewContactForm"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:ContactsMVVM.Views"
+        xmlns:VMs="clr-namespace:ContactsMVVM.ViewModels"
+        mc:Ignorable="d"
+        Title="NewContactForm"
+        FontSize="20" SizeToContent="WidthAndHeight">
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+    </Window.Resources>
+    <Window.DataContext>
+        <VMs:NewContactViewModel/>
+    </Window.DataContext>
+    <Grid Margin="50">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <StackPanel HorizontalAlignment="Center" Grid.Column="1">
+            <Label Content="_Name" Target="{Binding ElementName=txtName}"/>
+            <TextBox Name="txtName" Text="{Binding Path=FullName, Mode=TwoWay}" TabIndex="0"/>
+            <Label x:Name="nameError" Content="Name is required" HorizontalContentAlignment="Center" 
+                   FontSize="10" FontStyle="Italic" Foreground="Red" VerticalContentAlignment="Top" 
+                   Visibility="{Binding NameErrorVisibility, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+            <Separator Margin="0,10"/>
+            <Label Content="_Email" Target="{Binding ElementName=txtEmail}"/>
+            <StackPanel Orientation="Horizontal">
+                <TextBox Name="txtEmail" MinWidth="150" Text="{Binding Path=EmailText, Mode=TwoWay}" TabIndex="1"/>
+                <ComboBox Name="cmbEmailType" ItemsSource="{Binding Path=EmailTypes}" 
+                          SelectedItem="{Binding Path=SelectedEmailType, Mode=TwoWay}" 
+                          Width="auto" Margin="10,0,0,0" TabIndex="2"/>
+            </StackPanel>
+            <Button x:Name="btnAddEmail" Content="Add Email" Command="{Binding Path=AddEmailCommand}" Margin="10" FontSize="12" 
+                    CommandParameter="{Binding ElementName=txtEmail}" TabIndex="3"/>
+            <StackPanel Orientation="Horizontal" Margin="0,10">
+                <ListBox x:Name="lstEmails" ItemsSource="{Binding Emails, Mode=OneWay}" DisplayMemberPath="Item1" FontSize="12"
+                         IsTabStop="False"/>
+                <ListBox x:Name="lstEmailTypes" ItemsSource="{Binding Emails, Mode=OneWay}" DisplayMemberPath="Item2" FontSize="12"
+                         IsTabStop="False"/>
+                <ListBox ItemsSource="{Binding Emails, Mode=OneWay}" FontSize="12" IsTabStop="False">
+                    <ListBox.ItemTemplate>
+                        <ItemContainerTemplate>
+                            <Button Content="Remove" Command="{Binding ElementName=window, Path=DataContext.RemoveItemCommand}" 
+                                    CommandParameter="{Binding}"/>
+                        </ItemContainerTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </StackPanel>
+
+            <Separator Margin="0,10"/>
+            <Label Name="lblPhoneNumber" Content="_Phone Number" Width="auto" Target="{Binding ElementName=txtPhone}"/>
+            <StackPanel Orientation="Horizontal">
+                <TextBox Name="txtPhone" MinWidth="150" Text="{Binding Path=PhoneText, Mode=TwoWay}" TabIndex="4"/>
+                <ComboBox Name="cmbPhoneType" ItemsSource="{Binding Path=PhoneTypes}" 
+                          SelectedItem="{Binding Path=SelectedPhoneType, Mode=TwoWay}" 
+                          Width="auto" Margin="10,0,0,0" TabIndex="5"/>
+            </StackPanel>
+            <Button x:Name="btnAddPhone" Content="Add Phone" Command="{Binding Path=AddPhoneCommand}" Margin="10" FontSize="12"
+                    CommandParameter="{Binding ElementName=txtPhone}" TabIndex="6"/>
+            <StackPanel Orientation="Horizontal" Margin="0,10">
+                <ListBox x:Name="lstPhones" ItemsSource="{Binding Phones, Mode=OneWay}" DisplayMemberPath="Item1" FontSize="12"
+                         IsTabStop="False"/>
+                <ListBox x:Name="lstPhoneTypes" ItemsSource="{Binding Phones, Mode=OneWay}" DisplayMemberPath="Item2" FontSize="12"
+                         IsTabStop="False"/>
+                <ListBox ItemsSource="{Binding Phones, Mode=OneWay}" FontSize="12" IsTabStop="False">
+                    <ListBox.ItemTemplate>
+                        <ItemContainerTemplate>
+                            <Button Content="Remove" Command="{Binding ElementName=window, Path=DataContext.RemoveItemCommand}" 
+                    CommandParameter="{Binding}"/>
+                        </ItemContainerTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </StackPanel>
+            <Separator Margin="0,10"/>
+            <Label Content="_Birthday" Target="{Binding ElementName=dateBirthday}"/>
+            <DatePicker x:Name="dateBirthday" SelectedDate="{Binding Path=Birthday, Mode=TwoWay}" Margin="10,10" TabIndex="7"/>
+            <Separator Margin="0,10"/>
+            <Label Content="_Links" Width="auto" Target="{Binding ElementName=txtLinks}"/>
+            <TextBox Name="txtLinks" Width="auto" Text="{Binding Path=LinkText, Mode=TwoWay}" TabIndex="8"/>
+            <Button x:Name="btnLinks" Content="Add Link" FontSize="12" Margin="10" Command="{Binding Path=AddLinkCommand}"
+                    CommandParameter="{Binding ElementName=txtLinks}" TabIndex="9"/>
+            <StackPanel Orientation="Horizontal">
+                <ListBox x:Name="lstLinks" ItemsSource="{Binding Links, Mode=OneWay}" IsTabStop="False">
+                    <ListBox.ItemTemplate>
+                        <ItemContainerTemplate>
+                            <TextBlock>
+                            <Hyperlink NavigateUri="{Binding NavigateUri, Mode=OneWay}">
+                                <Hyperlink.Inlines>
+                                    <Run Text="{Binding NavigateUri, Mode=OneWay}"/>
+                                </Hyperlink.Inlines>
+                            </Hyperlink>
+                            </TextBlock>
+                        </ItemContainerTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+                <ListBox ItemsSource="{Binding Links, Mode=OneWay}" FontSize="12" IsTabStop="False">
+                    <ListBox.ItemTemplate>
+                        <ItemContainerTemplate>
+                            <Button Content="Remove" Command="{Binding ElementName=window, Path=DataContext.RemoveItemCommand}" 
+                    CommandParameter="{Binding}"/>
+                        </ItemContainerTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </StackPanel>
+
+            <Button Name="btnSubmit" Content="_Submit" Margin="0,10" Command="{Binding Path=SubmitCommand}" FontSize="16"
+                    CommandParameter="{Binding Mode=OneWay, RelativeSource={RelativeSource FindAncestor, 
+                AncestorType={x:Type local:NewContactForm}}}" TabIndex="10"/>
+            <Button Name="btnCancel" Content="_Cancel" Margin="0,10" Command="{Binding Path=CancelCommand}" FontSize="16"
+                    CommandParameter="{Binding Mode=OneWay, RelativeSource={RelativeSource FindAncestor, 
+                AncestorType={x:Type local:NewContactForm}}}" TabIndex="11"/>
+        </StackPanel>
+    </Grid>
+</Window>

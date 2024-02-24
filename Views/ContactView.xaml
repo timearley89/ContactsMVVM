@@ -7,84 +7,229 @@
         xmlns:top="clr-namespace:ContactsMVVM"
         xmlns:VMs="clr-namespace:ContactsMVVM.ViewModels"
         mc:Ignorable="d"
-        Title="ContactView" Height="450" Width="800">
+        Title="Contact Viewer" MinHeight="300" Height="450" Width="800" MinWidth="400" 
+        MaxHeight="800" MaxWidth="1200" WindowStartupLocation="CenterScreen" 
+        SizeToContent="WidthAndHeight" Background="{StaticResource BackGroundBrush}">
     <Window.DataContext>
         <VMs:ContactViewModel/>
     </Window.DataContext>
     <Window.Resources>
         <CollectionViewSource x:Key="PhoneTypes" Source="{Binding Path=PhoneTypes}"/>
         <CollectionViewSource x:Key="EmailTypes" Source="{Binding Path=EmailTypes}"/>
+
     </Window.Resources>
     <Grid>
-        <StackPanel>
-            <TextBlock Name="txtContactsCount" Text="{Binding Path=ContactCount, Mode=OneWay}"/>
-            <Separator/>
-            <Button Content="_Add Contact" Command="{Binding Path=AddContactCommand}" Margin="10,5" TabIndex="0"/>
-            <Button Content="_Edit Contact" Command="{Binding Path=EditContactCommand}" Margin="10,5" TabIndex="1"
-                    IsEnabled="{Binding Path=BtnEditEnabled}" CommandParameter="{Binding Path=SelectedContact}"/>
-            <Button Content="_Delete All!" Command="{Binding Path=DeleteContactsCommand}" Margin="10,5" TabIndex="2"/>
-            <DataGrid Name="dgContacts" ItemsSource="{Binding Path=myContacts}" AutoGenerateColumns="False" IsReadOnly="True" Margin="10,5"
-                      SelectedItem="{Binding Path=SelectedContact, Mode=OneWayToSource}">
-                <DataGrid.Columns>
-                    <DataGridTextColumn Header="Name" Binding="{Binding Path=Name.FullName}"/>
-                    <DataGridTemplateColumn Header="Phone Numbers">
-                        <DataGridTemplateColumn.CellTemplate>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*" MinHeight="100"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+
+            <TextBlock x:Name="txtHeader" Text="Earleytech Contacts" Grid.Row="0" FontSize="20" Foreground="DarkGreen" Margin="10,5,10,0" FontFamily="Cascadia Code SemiBold"/>
+            <Separator Grid.Row="1"/>
+            <Button Template="{DynamicResource ButtonTemplate1}" Content="_Add Contact" Command="{Binding Path=AddContactCommand}" Margin="10,5" TabIndex="0" Grid.Row="2"/>
+        <Button Template="{DynamicResource ButtonTemplate1}" Content="_Edit Contact" Command="{Binding Path=EditContactCommand}" Margin="10,5" TabIndex="1"
+                    IsEnabled="{Binding Path=BtnEditEnabled}" CommandParameter="{Binding Path=SelectedContact}" Grid.Row="3"/>
+            <StackPanel Orientation="Horizontal" Margin="10,5" HorizontalAlignment="Center" Width="auto"
+                        Grid.Row="4">
+            <Button Template="{DynamicResource ButtonTemplate1}" Name="btnSave" Content="Save Contacts" FontSize="12" Margin="0,0,5,0" Command="{Binding Path=SaveContactsCommand}"
+                        CommandParameter="{Binding Path=myContacts}"/>
+            <Button Template="{DynamicResource ButtonTemplate1}" Name="btnLoad" Content="Load Contacts" FontSize="12" Margin="5,0,0,0" Command="{Binding Path=LoadContactsCommand}"
+                        />
+            </StackPanel>
+        <Button Template="{DynamicResource ButtonTemplate1}" Content="_Delete All!" Command="{Binding Path=DeleteContactsCommand}" Margin="10,5" TabIndex="2" Grid.Row="5" 
+                />
+        <Separator Grid.Row="6"/>
+        <DataGrid Name="dgContacts" ItemsSource="{Binding Path=myContacts}" AutoGenerateColumns="False" IsReadOnly="True" Margin="10,5"
+                      SelectedItem="{Binding Path=SelectedContact, Mode=OneWayToSource}" ScrollViewer.CanContentScroll="True" 
+                      ScrollViewer.HorizontalScrollBarVisibility="Visible" ScrollViewer.VerticalScrollBarVisibility="Visible"
+                      Grid.Row="7" VirtualizingPanel.ScrollUnit="Pixel">
+            <DataGrid.Columns>
+                <DataGridTemplateColumn Header="Name" IsReadOnly="True">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <ItemContainerTemplate>
+                            <TextBlock Text="{Binding Name.FullName, Mode=OneWay}" Style="{StaticResource DataTextBlock}"/>
+                        </ItemContainerTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="Nickname" IsReadOnly="True">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <ItemContainerTemplate>
+                            <TextBlock Text="{Binding Path=Nickname.FullName}" Style="{StaticResource DataTextBlock}"/>
+                        </ItemContainerTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="Aliases" IsReadOnly="True" >
+                    <DataGridTemplateColumn.CellTemplate>
+                        <ItemContainerTemplate>
+                            <ListBox Name="lstAliases" ItemsSource="{Binding Aliases, Mode=OneWay}" DisplayMemberPath="{Binding Path=Name.FullName}"
+                                     IsHitTestVisible="False" IsTabStop="False" HorizontalContentAlignment="Stretch">
+                                <ListBox.ItemTemplate>
+                                    <ItemContainerTemplate>
+                                        <TextBlock Text="{Binding Path=Name.FullName}" Style="{StaticResource DataTextBlock}"/>
+                                    </ItemContainerTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                        </ItemContainerTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="Phone Numbers" IsReadOnly="True">
+                    <DataGridTemplateColumn.CellTemplate>
                             <ItemContainerTemplate>
-                                <StackPanel Orientation="Horizontal">
-                                    <ListBox x:Name="lstPhone" ItemsSource="{Binding PhoneNumbers}">
+
+                                    <ListBox x:Name="lstPhone" ItemsSource="{Binding PhoneNumbers}" HorizontalContentAlignment="Stretch" 
+                                             ScrollViewer.VerticalScrollBarVisibility="Disabled" IsTabStop="False" IsHitTestVisible="False">
                                         <ListBox.ItemTemplate>
                                             <ItemContainerTemplate>
-                                                <StackPanel Orientation="Horizontal">
-                                                    <Label Content="{Binding}" FontSize="14"/>
-                                                    <Label Content=" - " FontSize="14"/>
-                                                    <Label Content="{Binding Type}" FontSize="14"/>
+                                                <StackPanel Orientation="Horizontal" ScrollViewer.VerticalScrollBarVisibility="Disabled" IsHitTestVisible="False">
+                                                    <Label Content="{Binding}" ScrollViewer.VerticalScrollBarVisibility="Disabled" IsTabStop="False" 
+                                                           IsHitTestVisible="False" Style="{StaticResource DataLabel}"/>
+                                                    <Label Content=" - " IsHitTestVisible="False" IsTabStop="False"
+                                                           Style="{StaticResource DataLabel}"/>
+                                                    <Label Content="{Binding Type}" IsHitTestVisible="False" IsTabStop="False"
+                                                            Style="{StaticResource DataLabel}"/>
                                                 </StackPanel>
                                             </ItemContainerTemplate>
                                         </ListBox.ItemTemplate>
                                     </ListBox>
-                                </StackPanel>
+
                             </ItemContainerTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="Addresses" IsReadOnly="True">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <ItemContainerTemplate>
+                            <ListBox Name="lstAddresses" ItemsSource="{Binding Path=Addresses}" IsHitTestVisible="False" IsTabStop="False" HorizontalContentAlignment="Stretch">
+                                <ListBox.ItemTemplate>
+                                    <ItemContainerTemplate>
+                                        <StackPanel>
+                                            <TextBlock Text="{Binding Path=Type}" Style="{StaticResource DataTextBlock}"/>
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="{Binding Path=StreetNumber, Mode=OneWay}" Style="{StaticResource DataTextBlock}"/>
+                                                <TextBlock Text=" " Style="{StaticResource DataTextBlock}"/>
+                                                <TextBlock Text="{Binding Path=StreetName, Mode=OneWay}" Style="{StaticResource DataTextBlock}"/>
+                                            </StackPanel>
+                                            <TextBlock Text="{Binding Path=City, Mode=OneWay}" Style="{StaticResource DataTextBlock}"/>
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Text="{Binding Path=State}" Style="{StaticResource DataTextBlock}"/>
+                                                <TextBlock Text=" " Style="{StaticResource DataTextBlock}"/>
+                                                <TextBlock Text="{Binding Path=ZipCode}" Style="{StaticResource DataTextBlock}"/>
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </ItemContainerTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                        </ItemContainerTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
                     <DataGridTemplateColumn Header="Email Addresses">
                         <DataGridTemplateColumn.CellTemplate>
                             <ItemContainerTemplate>
-                                <StackPanel Orientation="Horizontal">
-                                    <ListBox x:Name="lstEmail" ItemsSource="{Binding EmailAddresses}">
+
+                                    <ListBox x:Name="lstEmail" ItemsSource="{Binding EmailAddresses}" HorizontalContentAlignment="Stretch" 
+                                             ScrollViewer.VerticalScrollBarVisibility="Disabled" IsHitTestVisible="False" IsTabStop="False">
                                         <ListBox.ItemTemplate>
                                             <ItemContainerTemplate>
-                                                <StackPanel Orientation="Horizontal">
-                                                    <Label Content="{Binding}" FontSize="14"/>
-                                                    <Label Content=" - " FontSize="14"/>
-                                                    <Label Content="{Binding Type}" FontSize="14"/>
+                                                <StackPanel Orientation="Horizontal" ScrollViewer.VerticalScrollBarVisibility="Disabled" IsHitTestVisible="False">
+                                                    <Label Content="{Binding}" IsHitTestVisible="False" IsTabStop="False"
+                                                            Style="{StaticResource DataLabel}"/>
+                                                    <Label Content=" - " IsHitTestVisible="False" IsTabStop="False"
+                                                            Style="{StaticResource DataLabel}"/>
+                                                    <Label Content="{Binding Type}" IsHitTestVisible="False" IsTabStop="False"
+                                                            Style="{StaticResource DataLabel}"/>
                                                 </StackPanel>
                                             </ItemContainerTemplate>
                                         </ListBox.ItemTemplate>
                                     </ListBox>
-                                </StackPanel>
+
                             </ItemContainerTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                    <DataGridTemplateColumn Header="Links">
+                <DataGridTemplateColumn Header="Organizations">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <ItemContainerTemplate>
+                            <ListBox x:Name="lstOrganizations" ItemsSource="{Binding Path=Organizations}" HorizontalContentAlignment="Stretch" IsHitTestVisible="False"
+                                     IsTabStop="False">
+                                <ListBox.ItemTemplate>
+                                    <ItemContainerTemplate>
+                                        <TextBlock Text="{Binding Path=Name}" Style="{StaticResource DataTextBlock}"/>
+                                    </ItemContainerTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                        </ItemContainerTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Header="Links" IsReadOnly="True">
                         <DataGridTemplateColumn.CellTemplate>
                             <ItemContainerTemplate x:Name="listboxTemplate">
-                                <ListBox x:Name="lstLinks" ItemsSource="{Binding Links}">
+                                <ListBox x:Name="lstLinks" ItemsSource="{Binding Links}" HorizontalContentAlignment="Stretch" IsHitTestVisible="True" IsTabStop="False">
                                     <ListBox.ItemTemplate>
                                         <ItemContainerTemplate x:Name="linkTemplate">
                                             <Button Name="btnLink" Content="{Binding NavigateUri, Mode=OneWay}" 
                                                     Command="{Binding DataContext.OnLinkCommand, ElementName=window}" 
                                                     CommandParameter="{Binding Mode=OneWay, RelativeSource={RelativeSource Self}}"
-                                                    FontSize="12" Foreground="Blue"/>
+                                                    Style="{StaticResource DataLinkButton}" IsTabStop="False"/>
                                         </ItemContainerTemplate>
                                     </ListBox.ItemTemplate>
                                 </ListBox>
                             </ItemContainerTemplate>
                         </DataGridTemplateColumn.CellTemplate>
                     </DataGridTemplateColumn>
-                    <DataGridTextColumn Header="Birthday" Binding="{Binding Path=Birthday}"/>
+                <DataGridTemplateColumn Header="Birthday">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <ItemContainerTemplate>
+                            <StackPanel>
+                                <TextBlock Text="{Binding Path=LongBirthdayString, Mode=OneWay}" Style="{StaticResource DataTextBlock}"/>
+                                <TextBlock Text="{Binding Path=Age, Mode=OneWay, StringFormat=Age: {0} years}" Style="{StaticResource DataTextBlock}"/>
+                            </StackPanel>
+                        </ItemContainerTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="Physical Info">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <ItemContainerTemplate>
+                                <StackPanel HorizontalAlignment="Stretch">
+                                    <TextBlock Text="{Binding Path=PhysicalInfo.EyeColor, Mode=OneWay, StringFormat=Eye Color: {0}}"
+                                               TextAlignment="Justify" Style="{StaticResource DataTextBlock}"/>
+                                    <TextBlock Text="{Binding Path=PhysicalInfo.HairColor, Mode=OneWay, StringFormat=Hair Color: {0}}"
+                                                TextAlignment="Justify" Style="{StaticResource DataTextBlock}"/>
+                                    <TextBlock Text="{Binding Path=PhysicalInfo.Gender, Mode=OneWay, StringFormat=Gender: {0}}"
+                                                TextAlignment="Justify" Style="{StaticResource DataTextBlock}"/>
+                                    <TextBlock Text="{Binding Path=PhysicalInfo.Complexion, Mode=OneWay, StringFormat=Complexion: {0}}"
+                                                TextAlignment="Justify" Style="{StaticResource DataTextBlock}"/>
+                                    <TextBlock Text="{Binding Path=PhysicalInfo.Ethnicity, Mode=OneWay, StringFormat=Ethnicity: {0}}"
+                                                TextAlignment="Justify" Style="{StaticResource DataTextBlock}"/>
+                                    <TextBlock Text="{Binding Path=PhysicalInfo.Height.Inches, StringFormat=Height: {0} Inches}"
+                                                TextAlignment="Justify" Style="{StaticResource DataTextBlock}"/>
+                                    <TextBlock Text="{Binding Path=PhysicalInfo.Weight.Lbs, StringFormat=Weight: {0} lbs}"
+                                                TextAlignment="Justify" Style="{StaticResource DataTextBlock}"/>
+                                </StackPanel>
+                            </ItemContainerTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
                 </DataGrid.Columns>
             </DataGrid>
 
-        </StackPanel>
+
+        <StatusBar Grid.Row="8">
+            <StatusBar.Background>
+                <LinearGradientBrush StartPoint="0,0.5" EndPoint="1,0.5">
+                    <GradientStop Color="LightBlue" Offset="0"/>
+                    <GradientStop Color="#ddddff" Offset="1"/>
+                </LinearGradientBrush>
+            </StatusBar.Background>
+            <StatusBarItem HorizontalAlignment="Left">
+                <TextBlock Name="txtStatus" FontSize="12" TextAlignment="Left" Text="{Binding Path=StatusBarText}" HorizontalAlignment="Left"/>
+            </StatusBarItem>
+            <StatusBarItem HorizontalContentAlignment="Right">
+                <TextBlock Name="statusContactsCount" Text="{Binding Path=ContactCount, Mode=OneWay}" FontSize="12"/>
+            </StatusBarItem>
+        </StatusBar>
     </Grid>
 </Window>

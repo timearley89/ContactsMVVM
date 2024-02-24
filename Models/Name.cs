@@ -23,7 +23,7 @@ namespace ContactsMVVM.Models
                 {
                     _fullName = value;
                     ParseName(FullName);
-                    OnPropertyChanged(nameof(FullName));
+                    OnPropertyChanged();
                 }
             }
         }
@@ -35,7 +35,7 @@ namespace ContactsMVVM.Models
                 if (value != _first)
                 {
                     _first = value;
-                    OnPropertyChanged(nameof(First));
+                    OnPropertyChanged();
                 }
             }
         }
@@ -47,7 +47,7 @@ namespace ContactsMVVM.Models
                 if (value != _last)
                 {
                     _last = value;
-                    OnPropertyChanged(nameof(Last));
+                    OnPropertyChanged();
                 }
             }
         }
@@ -59,7 +59,7 @@ namespace ContactsMVVM.Models
                 if (value != _middle)
                 {
                     _middle = value;
-                    OnPropertyChanged(nameof(Middle));
+                    OnPropertyChanged();
                 }
             }
         }
@@ -71,7 +71,7 @@ namespace ContactsMVVM.Models
                 if (value != _suffix)
                 {
                     _suffix = value;
-                    OnPropertyChanged(nameof(Suffix));
+                    OnPropertyChanged();
                 }
             }
         }

@@ -16,22 +16,22 @@ namespace ContactsMVVM.Models
         public string Name
         {
             get { return _name; }
-            set { if (_name != value) { _name = value; OnPropertyChanged(nameof(Name)); } }
+            set { if (_name != value) { _name = value; OnPropertyChanged(); } }
         }
         public Address Address
         {
             get { return _address; }
-            set { if (_address != value) { _address = value; OnPropertyChanged(nameof(Address)); } }
+            set { if (_address != value) { _address = value; OnPropertyChanged(); } }
         }
         public PhoneNumber PhoneNumber
         {
             get { return _phoneNumber; }
-            set { if (_phoneNumber != value) { _phoneNumber = value; OnPropertyChanged(nameof(PhoneNumber)); } }
+            set { if (_phoneNumber != value) { _phoneNumber = value; OnPropertyChanged(); } }
         }
         public Email Email
         {
             get { return _email; }
-            set { if (_email != value) { _email = value; OnPropertyChanged(nameof(Email)); } }
+            set { if (_email != value) { _email = value; OnPropertyChanged(); } }
         }
         public Organization()
         {
@@ -39,6 +39,10 @@ namespace ContactsMVVM.Models
             _address = new();
             _phoneNumber = new();
             _email = new();
+        }
+        public override string ToString()
+        {
+            return Name;
         }
     }
 }

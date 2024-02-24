@@ -13,9 +13,9 @@ namespace ContactsMVVM.Models
         private string _username;
         private string _domain;
         private EmailType _type;
-        public string Username { get { return _username; } set { if (_username != value) { _username = ValidateUsername(value) ?? ""; OnPropertyChanged(nameof(Username)); } } }
-        public string Domain { get { return _domain; } set { if (_domain != value) { _domain = ValidateDomain(value) ?? ""; OnPropertyChanged(nameof(Domain)); } } }
-        public EmailType Type { get { return _type; } set { if (_type != value) { _type = value; OnPropertyChanged(nameof(Type)); } } }
+        public string Username { get { return _username; } set { if (_username != value) { _username = ValidateUsername(value) ?? ""; OnPropertyChanged(); } } }
+        public string Domain { get { return _domain; } set { if (_domain != value) { _domain = ValidateDomain(value) ?? ""; OnPropertyChanged(); } } }
+        public EmailType Type { get { return _type; } set { if (_type != value) { _type = value; OnPropertyChanged(); } } }
 
         public static string? ValidateUsername(string username)
         {

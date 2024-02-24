@@ -14,12 +14,12 @@ namespace ContactsMVVM.Models
         private string _State;
         private string _ZipCode;
         private AddressType _Type;
-        public int StreetNumber { get { return _StreetNumber; } set { if (_StreetNumber != value) { _StreetNumber = value; OnPropertyChanged(nameof(StreetNumber)); } } }
-        public string StreetName { get { return _StreetName; } set { if (_StreetName != value) { _StreetName = value; OnPropertyChanged(nameof(StreetName)); } } }
-        public string City { get { return _City; } set { if (_City != value) { _City = value; OnPropertyChanged(nameof(City)); } } }
-        public string State { get { return _State; } set { if (_State != value) { _State = value; OnPropertyChanged(nameof(State)); } } }
-        public string ZipCode { get { return _ZipCode; } set { if (_ZipCode != value) { _ZipCode = value; OnPropertyChanged(nameof(ZipCode)); } } }
-        public AddressType Type { get { return _Type; } set { if (_Type != value) { _Type = value; OnPropertyChanged(nameof(Type)); } } }
+        public int StreetNumber { get { return _StreetNumber; } set { if (_StreetNumber != value) { _StreetNumber = value; OnPropertyChanged(); } } }
+        public string StreetName { get { return _StreetName; } set { if (_StreetName != value) { _StreetName = value; OnPropertyChanged(); } } }
+        public string City { get { return _City; } set { if (_City != value) { _City = value; OnPropertyChanged(); } } }
+        public string State { get { return _State; } set { if (_State != value) { _State = value; OnPropertyChanged(); } } }
+        public string ZipCode { get { return _ZipCode; } set { if (_ZipCode != value) { _ZipCode = value; OnPropertyChanged(); } } }
+        public AddressType Type { get { return _Type; } set { if (_Type != value) { _Type = value; OnPropertyChanged(); } } }
 
         public Address()
         {
@@ -32,6 +32,10 @@ namespace ContactsMVVM.Models
 
         public void Parse(string Address)
         {
+            if (Address == string.Empty)
+            {
+                throw new ArgumentException("Address can not be empty.", nameof(Address));
+            }
             Address = Address.Trim();
             //--StreetNumber--//
             int numberLength = 0;
@@ -54,9 +58,9 @@ namespace ContactsMVVM.Models
             string[] addressParts = Address.Split(',');
             if (addressParts.Length == 3)
             {
-                StreetName = addressParts[0].Trim().Remove(',');
-                City = addressParts[1].Trim().Remove(',');
-                State = addressParts[2].Trim().Remove(',').Length > 2 ? addressParts[2].Trim().Remove(',') : addressParts[2].Trim().Remove(',').ToUpper();
+                StreetName = addressParts[0].Trim().Replace(',', '\0');
+                City = addressParts[1].Trim().Replace(',', '\0');
+                State = addressParts[2].Trim().Replace(',', '\0').Length > 2 ? addressParts[2].Trim().Replace(',', '\0') : addressParts[2].Trim().Replace(',', '\0').ToUpper();
             }
             else { throw new ArgumentException("The entered address was in an unsupported format - Could not split StreetName, City and State.", nameof(Address)); }
         }

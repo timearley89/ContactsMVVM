@@ -17,11 +17,11 @@ namespace ContactsMVVM.Models
         private int _group2;
         private PhoneType _type;
 
-        public int CountryCode { get { return _countryCode; } set { if (_countryCode != value) { _countryCode = value; OnPropertyChanged(nameof(CountryCode)); } } }
-        public int AreaCode { get { return _areaCode; } set { if (_areaCode != value) { _areaCode = value; OnPropertyChanged(nameof(AreaCode)); } } }
-        public int Group1 { get { return _group1; } set { if (_group1 != value) { _group1 = value; OnPropertyChanged(nameof(Group1)); } } }
-        public int Group2 { get { return _group2; } set { if (_group2 != value) { _group2 = value; OnPropertyChanged(nameof(Group2)); } } }
-        public PhoneType Type { get { return _type; } set { if (_type != value) { _type = value; OnPropertyChanged(nameof(Type)); } } }
+        public int CountryCode { get { return _countryCode; } set { if (_countryCode != value) { _countryCode = value; OnPropertyChanged(); } } }
+        public int AreaCode { get { return _areaCode; } set { if (_areaCode != value) { _areaCode = value; OnPropertyChanged(); } } }
+        public int Group1 { get { return _group1; } set { if (_group1 != value) { _group1 = value; OnPropertyChanged(); } } }
+        public int Group2 { get { return _group2; } set { if (_group2 != value) { _group2 = value; OnPropertyChanged(); } } }
+        public PhoneType Type { get { return _type; } set { if (_type != value) { _type = value; OnPropertyChanged(); } } }
 
         public override string ToString()
         {

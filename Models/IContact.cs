@@ -8,11 +8,11 @@ using System.Windows.Media.Imaging;
 
 namespace ContactsMVVM.Models
 {
-    interface IContact
+    public interface IContact
     {
         Name Name { get; set; }
         Name Nickname { get; set; }
-        IContact[] Aliases { get; set; }
+        SerializableContact[] Aliases { get; set; }
         Address[] Addresses { get; set; }
         PhoneNumber[] PhoneNumbers { get; set; }
         Email[] EmailAddresses { get; set; }
